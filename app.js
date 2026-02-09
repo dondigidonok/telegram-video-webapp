@@ -55,21 +55,26 @@ function openInBrowser(browserId) {
     }
 }
 
+// Показываем баннер только когда страница открыта внутри Telegram на Android.
+// Во внешнем браузере (Chrome, Firefox и т.д.) initData от Telegram нет — баннер не показываем.
+function isInsideTelegramWebView() {
+    return tg.platform === 'android' && tg.initData && tg.initData.length > 0;
+}
+
 (function initAndroidBanner() {
-    if (tg.platform === 'android') {
-        var banner = document.getElementById('android-browser-banner');
-        var container = document.getElementById('browser-buttons');
-        if (!banner || !container) return;
-        banner.hidden = false;
-        EXTERNAL_BROWSERS.forEach(function (b) {
-            var btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'browser-btn browser-btn-small';
-            btn.textContent = b.name;
-            btn.addEventListener('click', function () { openInBrowser(b.id); });
-            container.appendChild(btn);
-        });
-    }
+    if (!isInsideTelegramWebView()) return;
+    var banner = document.getElementById('android-browser-banner');
+    var container = document.getElementById('browser-buttons');
+    if (!banner || !container) return;
+    banner.hidden = false;
+    EXTERNAL_BROWSERS.forEach(function (b) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'browser-btn browser-btn-small';
+        btn.textContent = b.name;
+        btn.addEventListener('click', function () { openInBrowser(b.id); });
+        container.appendChild(btn);
+    });
 })();
 
 // Обработка закрытия приложения
