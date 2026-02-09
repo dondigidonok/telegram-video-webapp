@@ -8,7 +8,12 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
+    <!-- На Android сразу открываем во внешнем браузере (Widevine там работает) -->
+    <div id="android-opened-message" class="android-message" hidden>
+        <p>Видео открыто в браузере.</p>
+        <button type="button" id="android-close-btn" class="open-browser-btn">Закрыть</button>
+    </div>
+    <div id="player-container" class="container">
         <div class="player-wrapper">
             <div style="position: relative; padding-top: 56.25%; width: 100%">
                 <iframe 

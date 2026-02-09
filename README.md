@@ -179,6 +179,18 @@ node bot_example.js
 - ✅ **Доступность файлов** - все файлы должны быть доступны по указанному URL
 - ✅ **CORS заголовки** - убедитесь, что сервер не блокирует запросы от Telegram
 
+## Widevine (DRM) на Android
+
+Видео с защитой **Widevine** может не воспроизводиться на **Android** во встроенном WebView Telegram: в нём часто не включён protected content (RESOURCE_PROTECTED_MEDIA_ID) или есть ограничения по уровням Widevine (L1/L2/L3).
+
+**Что сделано в приложении:** на Android страница **сразу открывается во внешнем браузере** (Chrome и т.д.) через `Telegram.WebApp.openLink()`. В WebApp остаётся сообщение «Видео открыто в браузере» и кнопка «Закрыть». Во внешнем браузере Widevine работает нормально.
+
+**Альтернативы (без изменения кода приложения):**
+- Пользователь может вручную открыть ссылку на приложение в Chrome (меню бота → «Открыть в браузере», если есть такая опция в клиенте).
+- Включить воспроизведение защищённого контента может только приложение Telegram (настройки WebView с RESOURCE_PROTECTED_MEDIA_ID) — мы не управляем этим из WebApp.
+
+Ссылки по теме: [Widevine в Android WebView](https://stackoverflow.com/questions/47626857/how-to-play-widevine-drm-content-in-android-webview), [Protected content в WebView](https://stackoverflow.com/questions/53143363/how-to-enable-protected-content-in-a-webview).
+
 ## Настройка видеоплеера
 
 Чтобы изменить видео, отредактируйте `src` атрибут iframe в `index.html`:
@@ -205,10 +217,16 @@ node bot_example.js
 - Управлять кнопками и интерфейсом
 
 Подробнее: [Telegram WebApp API Documentation](https://core.telegram.org/bots/webapps)
-#   t e l e g r a m - v i d e o - w e b a p p  
- #   t e l e g r a m - v i d e o - w e b a p p  
- #   t e l e g r a m - v i d e o - w e b a p p  
- #   t e l e g r a m - v i d e o - w e b a p p  
- #   t e l e g r a m - v i d e o - w e b a p p  
- #   t e l e g r a m - v i d e o - w e b a p p  
+#   t e l e g r a m - v i d e o - w e b a p p 
+ 
+ #   t e l e g r a m - v i d e o - w e b a p p 
+ 
+ #   t e l e g r a m - v i d e o - w e b a p p 
+ 
+ #   t e l e g r a m - v i d e o - w e b a p p 
+ 
+ #   t e l e g r a m - v i d e o - w e b a p p 
+ 
+ #   t e l e g r a m - v i d e o - w e b a p p 
+ 
  
