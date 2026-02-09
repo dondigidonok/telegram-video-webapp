@@ -30,14 +30,26 @@ function sendDataToTelegram(data) {
     tg.sendData(JSON.stringify(data));
 }
 
-// Обход ограничения Widevine на Android: открыть страницу во внешнем браузере
-// В WebView Telegram на Android защищённый контент (Widevine) часто не воспроизводится.
-// Во внешнем браузере (Chrome) DRM работает. См.:
-// https://stackoverflow.com/questions/53143363/how-to-enable-protected-content-in-a-webview
-function openInBrowser() {
+// Обход ограничения Widevine на Android: открыть страницу во внешнем браузере.
+// API Telegram принимает только один try_browser за вызов, автоматический fallback недоступен,
+// поэтому показываем кнопки выбора — пользователь нажимает тот браузер, который у него установлен.
+// Список идентификаторов: https://core.telegram.org/api/web-events#web-app-open-link
+var EXTERNAL_BROWSERS = [
+    { id: 'chrome', name: 'Chrome' },
+    { id: 'firefox', name: 'Firefox' },
+    { id: 'opera', name: 'Opera' },
+    { id: 'samsung', name: 'Samsung' },
+    { id: 'edge', name: 'Edge' },
+    { id: 'brave', name: 'Brave' },
+    { id: 'vivaldi', name: 'Vivaldi' },
+    { id: 'kiwi', name: 'Kiwi' },
+    { id: 'uc', name: 'UC' }
+];
+
+function openInBrowser(browserId) {
     var url = window.location.href;
     if (tg.openLink) {
-        tg.openLink(url, { try_instant_view: false });
+        tg.openLink(url, { try_instant_view: false, try_browser: browserId });
     } else {
         window.open(url, '_blank');
     }
@@ -46,9 +58,17 @@ function openInBrowser() {
 (function initAndroidBanner() {
     if (tg.platform === 'android') {
         var banner = document.getElementById('android-browser-banner');
-        var btn = document.getElementById('open-in-browser-btn');
-        if (banner) banner.hidden = false;
-        if (btn) btn.addEventListener('click', openInBrowser);
+        var container = document.getElementById('browser-buttons');
+        if (!banner || !container) return;
+        banner.hidden = false;
+        EXTERNAL_BROWSERS.forEach(function (b) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'browser-btn browser-btn-small';
+            btn.textContent = b.name;
+            btn.addEventListener('click', function () { openInBrowser(b.id); });
+            container.appendChild(btn);
+        });
     }
 })();
 

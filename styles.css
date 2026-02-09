@@ -38,6 +38,12 @@ body {
 .browser-banner p {
     margin: 0 0 8px 0;
 }
+.browser-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+}
 .browser-btn {
     padding: 8px 16px;
     font-size: 14px;
@@ -46,6 +52,10 @@ body {
     background: var(--tg-theme-button-color, #2481cc);
     color: var(--tg-theme-button-text-color, #fff);
     cursor: pointer;
+}
+.browser-btn-small {
+    padding: 6px 10px;
+    font-size: 12px;
 }
 .browser-btn:active {
     opacity: 0.9;
