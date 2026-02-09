@@ -61,12 +61,18 @@ body {
     opacity: 0.9;
 }
 
+/* Контейнер плеера: overflow: visible по рекомендации Kinescope для Widevine DRM
+   (скругления/overflow у родителя могут допускать запись экрана) */
 .player-wrapper {
     width: 100%;
     max-width: 100%;
     flex: 1;
     min-height: 0;
     background-color: #000;
+    overflow: visible;
+}
+.player-wrapper .player-embed {
+    overflow: visible;
 }
 
 /* Адаптивность для разных размеров экрана */
