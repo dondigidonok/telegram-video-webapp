@@ -1,234 +1,130 @@
-# Telegram WebApp с видеоплеером
+# Telegram WebApp — видеоплеер Kinescope
 
-Веб-приложение для Telegram с встроенным видеоплеером Kinescope.
+Мини-приложение для Telegram: открывается внутри мессенджера и показывает видео из [Kinescope](https://kinescope.io) с поддержкой Widevine DRM.
 
-## Структура проекта
+- Работает на ПК, iPhone и Android (в обычном браузере).
+- На Android внутри Telegram видео с DRM может не воспроизводиться — в приложении есть кнопки «Открыть в Chrome / Firefox / …», чтобы открыть страницу во внешнем браузере.
 
-```
-telegram_webapp/
-├── index.html          # Основная HTML страница
-├── styles.css          # Стили приложения
-├── app.js              # JavaScript логика для Telegram WebApp API
-├── bot_example.py      # Пример бота на Python
-├── bot_example.js      # Пример бота на Node.js
-└── README.md           # Инструкция по запуску
-```
+---
 
-## Развёртывание на GitHub (порядок действий)
+## Что внутри репозитория
 
-### Шаг 1. Создайте репозиторий на GitHub
+| Файл | Назначение |
+|------|------------|
+| `index.html` | Страница с плеером (iframe Kinescope) и баннером для Android |
+| `styles.css` | Стили страницы и кнопок |
+| `app.js` | Логика Telegram WebApp: тема, кнопки «Открыть в браузере» |
+| `bot_example.py` | Пример бота на Python с кнопкой Web App |
+| `bot_example.js` | Пример бота на Node.js с кнопкой Web App |
 
-1. Зайдите на [github.com](https://github.com) и войдите в аккаунт.
-2. Нажмите **«+»** → **«New repository»**.
-3. Укажите имя репозитория (например, `telegram-video-webapp`).
-4. Выберите **Public**, не добавляйте README, .gitignore и лицензию (файлы уже есть локально).
-5. Нажмите **«Create repository»**.
+---
 
-### Шаг 2. Инициализируйте Git и загрузите код
+## Как выложить на GitHub и открыть в Telegram
 
-В папке проекта выполните в терминале:
+### 1. Создать репозиторий на GitHub
+
+- Зайти на [github.com](https://github.com) → **New repository**.
+- Имя, например: `telegram-video-webapp`.
+- Репозиторий **Public**, без галочек README / .gitignore / License.
+
+### 2. Залить код
+
+В папке проекта:
 
 ```bash
-# Инициализация репозитория (если ещё не сделано)
 git init
-
-# Добавить все файлы
 git add .
-
-# Первый коммит
-git commit -m "Initial commit: Telegram WebApp с видеоплеером"
-
-# Подключить удалённый репозиторий (замените USER и REPO на свои)
-git remote add origin https://github.com/USER/REPO.git
-
-# Отправить код в ветку main
+git commit -m "Initial commit"
+git remote add origin https://github.com/ВАШ_ЛОГИН/telegram-video-webapp.git
 git branch -M main
 git push -u origin main
 ```
 
-Замените `USER` на ваш логин GitHub, `REPO` — на имя репозитория.
+Подставьте свой логин вместо `ВАШ_ЛОГИН`.
 
-### Шаг 3. Включите GitHub Pages
+### 3. Включить GitHub Pages
 
-1. В репозитории на GitHub откройте **Settings** (Настройки).
-2. В левом меню выберите **Pages** (в блоке «Code and automation»).
-3. В разделе **Source** выберите **Deploy from a branch**.
-4. В **Branch** выберите `main` и папку **/ (root)**.
-5. Нажмите **Save**.
+- В репозитории: **Settings** → слева **Pages**.
+- **Source:** Deploy from a branch.
+- **Branch:** `main`, папка **/ (root)** → **Save**.
 
-### Шаг 4. Дождитесь публикации
+Через 1–2 минуты приложение будет доступно по адресу:
 
-Через 1–2 минуты сайт будет доступен по адресу:
+**`https://ВАШ_ЛОГИН.github.io/telegram-video-webapp/`**
 
-```
-https://USER.github.io/REPO/
-```
+### 4. Подключить Web App к боту в Telegram
 
-Главная страница приложения:
+- Написать [@BotFather](https://t.me/BotFather).
+- Создать бота: `/newbot` (если ещё нет).
+- Настроить Mini App: `/newapp` или **Bot Settings** → **Configure Mini App**.
+- В качестве **URL приложения** указать:  
+  **`https://ВАШ_ЛОГИН.github.io/telegram-video-webapp/`**
 
-```
-https://USER.github.io/REPO/index.html
-```
-
-или просто:
-
-```
-https://USER.github.io/REPO/
-```
-
-(обычно GitHub Pages открывает `index.html` по корневому URL.)
-
-### Шаг 5. Подключите WebApp в Telegram
-
-1. Откройте [@BotFather](https://t.me/BotFather).
-2. Отправьте `/newapp` (или настройте WebApp для существующего бота).
-3. В качестве **URL приложения** укажите:
-   ```
-   https://USER.github.io/REPO/
-   ```
-   или
-   ```
-   https://USER.github.io/REPO/index.html
-   ```
-4. Сохраните настройки и откройте бота — кнопка Web App должна открывать ваш плеер.
+После этого в боте появится кнопка, по нажатию откроется ваш плеер.
 
 ---
 
-**Кратко:** создать репозиторий → `git init`, `add`, `commit`, `remote`, `push` → Settings → Pages → Branch: main → сохранить → использовать полученный URL в BotFather.
+## Как поменять видео
 
-## Как запустить в Telegram
+В `index.html` найдите iframe и замените ID видео в ссылке:
 
-### Вариант 1: Использование Telegram Bot API (рекомендуется)
+```html
+<iframe src="https://kinescope.io/embed/ВАШ_ID_ВИДЕО" ...></iframe>
+```
 
-1. **Создайте бота в Telegram:**
-   - Откройте [@BotFather](https://t.me/BotFather) в Telegram
-   - Отправьте команду `/newbot`
-   - Следуйте инструкциям для создания бота
-   - Сохраните полученный токен бота
+ID берётся из Kinescope (в адресе или настройках встраивания).
 
-2. **Разместите файлы на веб-сервере:**
-   - Загрузите все файлы (`index.html`, `styles.css`, `app.js`) на любой веб-хостинг
-   - Убедитесь, что файлы доступны по HTTPS (обязательно для Telegram WebApp)
-   - Примеры бесплатных хостингов:
-     - [GitHub Pages](https://pages.github.com/)
-     - [Netlify](https://www.netlify.com/)
-     - [Vercel](https://vercel.com/)
-     - [Firebase Hosting](https://firebase.google.com/docs/hosting)
+---
 
-3. **Настройте WebApp в боте:**
-   - Откройте [@BotFather](https://t.me/BotFather)
-   - Отправьте команду `/newapp`
-   - Выберите вашего бота
-   - Укажите название приложения
-   - Укажите описание
-   - Загрузите иконку (опционально)
-   - **Важно:** Укажите URL вашего приложения (например: `https://yourdomain.com/index.html`)
-   - Укажите короткое имя для приложения
+## Android и Widevine DRM
 
-4. **Проверьте работу:**
-   - Откройте вашего бота в Telegram
-   - Нажмите на кнопку меню (три линии) или найдите кнопку "Web App"
-   - Приложение должно открыться с видеоплеером
+- **Внутри Telegram на Android** встроенный браузер не всегда поддерживает защищённый контент (Widevine). Это ограничение приложения Telegram, а не этого проекта.
+- Поэтому в приложении на Android показывается баннер с кнопками: **Chrome**, **Firefox**, **Opera** и др. По нажатию страница открывается во внешнем браузере — там видео с DRM обычно воспроизводится.
+- В обычном Chrome на Android (не в инкогнито) Widevine должен работать. Если нет — проверьте поддержку DRM: [shaka-player-demo.appspot.com/support.html](https://shaka-player-demo.appspot.com/support.html).
 
-### Вариант 2: Использование кнопки с WebApp
+Подробнее: [Kinescope — возможные проблемы](https://docs.kinescope.io/player/v2.172.0/common-problems/).
 
-Если у вас уже есть бот, вы можете добавить кнопку с WebApp. В проекте есть готовые примеры:
+---
 
-**Python (bot_example.py):**
+## Требования
+
+- Сайт должен открываться по **HTTPS** (GitHub Pages даёт его автоматически).
+- Для бота нужен токен от [@BotFather](https://t.me/BotFather).
+
+---
+
+## Примеры ботов с кнопкой Web App
+
+**Python:**
+
 ```bash
 pip install python-telegram-bot
-# Отредактируйте BOT_TOKEN и WEBAPP_URL в файле
+```
+
+В `bot_example.py` укажите `BOT_TOKEN` и `WEBAPP_URL` (ваш URL с GitHub Pages), затем:
+
+```bash
 python bot_example.py
 ```
 
-**Node.js (bot_example.js):**
+**Node.js:**
+
 ```bash
 npm install node-telegram-bot-api
-# Отредактируйте BOT_TOKEN и WEBAPP_URL в файле
+```
+
+В `bot_example.js` укажите `BOT_TOKEN` и `WEBAPP_URL`, затем:
+
+```bash
 node bot_example.js
 ```
 
-Или добавьте кнопку вручную через Bot API:
+После запуска бот отправит кнопку, по которой откроется ваше приложение.
 
-```json
-{
-  "text": "Открыть видеоплеер",
-  "web_app": {
-    "url": "https://yourdomain.com/index.html"
-  }
-}
-```
+---
 
-### Вариант 3: Локальное тестирование (для разработки)
+## Полезные ссылки
 
-1. **Используйте ngrok или подобный сервис:**
-   ```bash
-   # Установите ngrok
-   # Запустите локальный сервер (например, Python)
-   python -m http.server 8000
-   
-   # В другом терминале запустите ngrok
-   ngrok http 8000
-   ```
-
-2. **Используйте полученный HTTPS URL** в настройках WebApp в BotFather
-
-## Важные требования
-
-- ✅ **HTTPS обязателен** - Telegram WebApp работает только через HTTPS
-- ✅ **Доступность файлов** - все файлы должны быть доступны по указанному URL
-- ✅ **CORS заголовки** - убедитесь, что сервер не блокирует запросы от Telegram
-
-## Widevine (DRM) на Android
-
-Видео с защитой **Widevine** может не воспроизводиться **внутри Telegram на Android**, при этом на ПК и iOS всё работает.
-
-**Почему так:** WebView в Telegram для Android не предоставляет разрешение на защищённый контент (`RESOURCE_PROTECTED_MEDIA_ID`). Это ограничение встроенного браузера приложения, а не вашего кода. Подробнее: [How to enable protected content in a WebView](https://stackoverflow.com/questions/53143363/how-to-enable-protected-content-in-a-webview), [Widevine in Android WebView](https://stackoverflow.com/questions/47626857/how-to-play-widevine-drm-content-in-android-webview).
-
-**Что сделано в приложении:**
-
-1. **Кнопка «Открыть в браузере»** — на Android вверху страницы показывается баннер с этой кнопкой. По нажатию страница открывается во внешнем браузере (Chrome и др.), где Widevine поддерживается, и видео воспроизводится.
-
-2. **Рекомендация пользователям на Android:** если видео не идёт — нажать «Открыть в браузере» и смотреть там.
-
-**Что нельзя сделать со стороны веб-приложения:** включить воспроизведение DRM внутри WebView Telegram может только само приложение Telegram (добавив в свой WebView обработку `onPermissionRequest` и выдачу `RESOURCE_PROTECTED_MEDIA_ID`). Со стороны вашего WebApp доступен только обход через открытие во внешнем браузере.
-
-## Настройка видеоплеера
-
-Чтобы изменить видео, отредактируйте `src` атрибут iframe в `index.html`:
-
-```html
-<iframe 
-    src="https://kinescope.io/embed/ВАШ_ID_ВИДЕО" 
-    ...
-></iframe>
-```
-
-## Отладка
-
-1. Откройте приложение в Telegram
-2. Используйте встроенные инструменты разработчика Telegram (если доступны)
-3. Проверьте консоль браузера через удаленную отладку (для Android можно использовать Chrome DevTools)
-
-## Дополнительные возможности
-
-Приложение использует Telegram WebApp API, который позволяет:
-- Получать данные пользователя
-- Отправлять данные обратно в бота
-- Использовать тему Telegram (светлая/темная)
-- Управлять кнопками и интерфейсом
-
-Подробнее: [Telegram WebApp API Documentation](https://core.telegram.org/bots/webapps)
-#   t e l e g r a m - v i d e o - w e b a p p 
- 
- #   t e l e g r a m - v i d e o - w e b a p p 
- 
- #   t e l e g r a m - v i d e o - w e b a p p 
- 
- #   t e l e g r a m - v i d e o - w e b a p p 
- 
- #   t e l e g r a m - v i d e o - w e b a p p 
- 
- #   t e l e g r a m - v i d e o - w e b a p p 
- 
- 
+- [Telegram WebApp (Mini Apps)](https://core.telegram.org/bots/webapps)
+- [Kinescope — встраивание плеера](https://docs.kinescope.io/)
+- [Kinescope — возможные проблемы и решения](https://docs.kinescope.io/player/v2.172.0/common-problems/)
