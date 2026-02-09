@@ -181,15 +181,17 @@ node bot_example.js
 
 ## Widevine (DRM) на Android
 
-Видео с защитой **Widevine** может не воспроизводиться на **Android** во встроенном WebView Telegram: в нём часто не включён protected content (RESOURCE_PROTECTED_MEDIA_ID) или есть ограничения по уровням Widevine (L1/L2/L3).
+Видео с защитой **Widevine** может не воспроизводиться **внутри Telegram на Android**, при этом на ПК и iOS всё работает.
 
-**Что сделано в приложении:** на Android страница **сразу открывается во внешнем браузере** (Chrome и т.д.) через `Telegram.WebApp.openLink()`. В WebApp остаётся сообщение «Видео открыто в браузере» и кнопка «Закрыть». Во внешнем браузере Widevine работает нормально.
+**Почему так:** WebView в Telegram для Android не предоставляет разрешение на защищённый контент (`RESOURCE_PROTECTED_MEDIA_ID`). Это ограничение встроенного браузера приложения, а не вашего кода. Подробнее: [How to enable protected content in a WebView](https://stackoverflow.com/questions/53143363/how-to-enable-protected-content-in-a-webview), [Widevine in Android WebView](https://stackoverflow.com/questions/47626857/how-to-play-widevine-drm-content-in-android-webview).
 
-**Альтернативы (без изменения кода приложения):**
-- Пользователь может вручную открыть ссылку на приложение в Chrome (меню бота → «Открыть в браузере», если есть такая опция в клиенте).
-- Включить воспроизведение защищённого контента может только приложение Telegram (настройки WebView с RESOURCE_PROTECTED_MEDIA_ID) — мы не управляем этим из WebApp.
+**Что сделано в приложении:**
 
-Ссылки по теме: [Widevine в Android WebView](https://stackoverflow.com/questions/47626857/how-to-play-widevine-drm-content-in-android-webview), [Protected content в WebView](https://stackoverflow.com/questions/53143363/how-to-enable-protected-content-in-a-webview).
+1. **Кнопка «Открыть в браузере»** — на Android вверху страницы показывается баннер с этой кнопкой. По нажатию страница открывается во внешнем браузере (Chrome и др.), где Widevine поддерживается, и видео воспроизводится.
+
+2. **Рекомендация пользователям на Android:** если видео не идёт — нажать «Открыть в браузере» и смотреть там.
+
+**Что нельзя сделать со стороны веб-приложения:** включить воспроизведение DRM внутри WebView Telegram может только само приложение Telegram (добавив в свой WebView обработку `onPermissionRequest` и выдачу `RESOURCE_PROTECTED_MEDIA_ID`). Со стороны вашего WebApp доступен только обход через открытие во внешнем браузере.
 
 ## Настройка видеоплеера
 

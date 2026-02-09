@@ -9,30 +9,6 @@ tg.expand();
 tg.setHeaderColor(tg.themeParams.bg_color || '#ffffff');
 tg.setBackgroundColor(tg.themeParams.bg_color || '#ffffff');
 
-// На Android сразу открываем страницу во внешнем браузере — там Widevine работает.
-function isAndroid() {
-    if (tg.platform) return tg.platform === 'android';
-    var hash = (window.location.hash || '').slice(1);
-    if (hash) {
-        var params = new URLSearchParams(hash);
-        if (params.get('tgWebAppPlatform') === 'android') return true;
-    }
-    return /Android/i.test(navigator.userAgent);
-}
-
-if (isAndroid()) {
-    var url = window.location.href;
-    if (tg.openLink) tg.openLink(url);
-    else window.open(url, '_blank');
-    // В WebApp показываем сообщение и кнопку «Закрыть»
-    var msg = document.getElementById('android-opened-message');
-    var player = document.getElementById('player-container');
-    var closeBtn = document.getElementById('android-close-btn');
-    if (msg) msg.hidden = false;
-    if (player) player.hidden = true;
-    if (closeBtn) closeBtn.addEventListener('click', function () { tg.close(); });
-}
-
 // Обработка событий
 tg.onEvent('viewportChanged', (event) => {
     console.log('Viewport changed:', event);
@@ -53,6 +29,28 @@ window.addEventListener('error', (event) => {
 function sendDataToTelegram(data) {
     tg.sendData(JSON.stringify(data));
 }
+
+// Обход ограничения Widevine на Android: открыть страницу во внешнем браузере
+// В WebView Telegram на Android защищённый контент (Widevine) часто не воспроизводится.
+// Во внешнем браузере (Chrome) DRM работает. См.:
+// https://stackoverflow.com/questions/53143363/how-to-enable-protected-content-in-a-webview
+function openInBrowser() {
+    var url = window.location.href;
+    if (tg.openLink) {
+        tg.openLink(url, { try_instant_view: false });
+    } else {
+        window.open(url, '_blank');
+    }
+}
+
+(function initAndroidBanner() {
+    if (tg.platform === 'android') {
+        var banner = document.getElementById('android-browser-banner');
+        var btn = document.getElementById('open-in-browser-btn');
+        if (banner) banner.hidden = false;
+        if (btn) btn.addEventListener('click', openInBrowser);
+    }
+})();
 
 // Обработка закрытия приложения
 window.addEventListener('beforeunload', () => {
