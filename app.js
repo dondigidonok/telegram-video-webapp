@@ -47,7 +47,9 @@ var EXTERNAL_BROWSERS = [
 ];
 
 function openInBrowser(browserId) {
-    var url = window.location.href;
+    // Открываем URL без хеша (без tgWebAppData, tgWebAppPlatform и т.д.).
+    // Иначе во внешнем браузере страница загрузится с теми же параметрами и баннер не пропадёт.
+    var url = window.location.origin + window.location.pathname + (window.location.search || '');
     if (tg.openLink) {
         tg.openLink(url, { try_instant_view: false, try_browser: browserId });
     } else {
