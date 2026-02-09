@@ -57,10 +57,12 @@ function openInBrowser(browserId) {
     }
 }
 
-// Показываем баннер только когда страница открыта внутри Telegram на Android.
-// Во внешнем браузере (Chrome, Firefox и т.д.) initData от Telegram нет — баннер не показываем.
+// Показываем баннер только когда страница реально открыта внутри приложения Telegram на Android.
+// TelegramWebviewProxy внедряется только клиентом Telegram; в обычном браузере (Chrome и т.д.) его нет —
+// тогда баннер не показываем, даже если в URL попал хеш с tgWebAppData.
 function isInsideTelegramWebView() {
-    return tg.platform === 'android' && tg.initData && tg.initData.length > 0;
+    var inTelegramApp = typeof window.TelegramWebviewProxy !== 'undefined';
+    return tg.platform === 'android' && inTelegramApp;
 }
 
 (function initAndroidBanner() {
