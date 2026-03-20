@@ -11,7 +11,7 @@
 
 | Файл | Назначение |
 |------|------------|
-| `index.html` | Страница с плеером (iframe Kinescope) и баннером для Android |
+| `index.html` | Страница с двумя плеерами Kinescope (с DRM и без — для сравнения) и баннером для Android |
 | `styles.css` | Стили страницы и кнопок |
 | `app.js` | Логика Telegram WebApp: тема, кнопки «Открыть в браузере» |
 | `bot_example.py` | Пример бота на Python с кнопкой Web App |
@@ -66,13 +66,16 @@ git push -u origin main
 
 ## Как поменять видео
 
-В `index.html` найдите iframe и замените ID видео в ссылке:
+В `index.html` два блока `<iframe>`:
+
+- **С DRM** — `embed/2WFmbHsNz1W72DL9DGz2ps` (замените на свой ID защищённого видео).
+- **Без DRM** — `embed/mMZhUWSyT2F4aWFp6BJT5X` (обычное видео для сравнения поведения плеера).
 
 ```html
 <iframe src="https://kinescope.io/embed/ВАШ_ID_ВИДЕО" ...></iframe>
 ```
 
-ID берётся из Kinescope (в адресе или настройках встраивания).
+ID берётся из Kinescope (в адресе страницы вида `https://kinescope.io/ВАШ_ID` или в настройках встраивания).
 
 ---
 

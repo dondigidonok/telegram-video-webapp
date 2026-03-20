@@ -21,10 +21,26 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0;
     padding: 0;
     min-height: 0;
+}
+
+.player-section {
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.player-label {
+    padding: 10px 12px 8px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+    background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+    color: var(--tg-theme-text-color, #000);
+    border-bottom: 1px solid var(--tg-theme-hint-color, #ddd);
 }
 
 .browser-banner {
